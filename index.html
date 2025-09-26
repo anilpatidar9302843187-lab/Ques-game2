@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #ffcc00;
+      margin: 0;
+      padding: 0;
+    }
+
+    .screen {
+      display: none;
+      padding: 20px;
+    }
+
+    .active {
+      display: block;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      background: blue;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: darkblue;
+    }
+
+    #options button {
+      display: block;
+      width: 200px;
+      margin: 10px auto;
+      background: #fff;
+      color: black;
+      border: 1px solid #ccc;
+    }
+
+    #options button.correct {
+      background: green;
+      color: white;
+    }
+
+    #options button.wrong {
+      background: red;
+      color: white;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Start Screen -->
+  <div id="start-screen" class="screen active">
+    <h1>Let's Start Quiz</h1>
+    <p>Ready to test your Knowledge?</p>
+    <button onclick="startQuiz()">Let's get started</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quiz-screen" class="screen">
+    <div class="top-bar">
+      <span id="question-number">Question 1 of 10</span>
+      <span id="score">Score: 0</span>
+    </div>
+    <h2 id="question-text">Question comes here...</h2>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next Question</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div id="result-screen" class="screen">
+    <h1>Quiz Finished!</h1>
+    <p>Your Score: <span id="final-score"></span></p>
+    <button onclick="restartQuiz()">Restart</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Which is the largest planet in our solar system?",
+        options: ["Earth", "Mars", "Jupiter", "Saturn"],
+        answer: "Jupiter"
+      },
+      {
+        question: "Which planet is called the Red Planet?",
+        options: ["Earth", "Mars", "Venus", "Jupiter"],
+        answer: "Mars"
+      },
+      {
+        question: "What is the capital of India?",
+        options: ["Mumbai", "New Delhi", "Kolkata", "Chennai"],
+        answer: "New Delhi"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startQuiz() {
+      document.getElementById("start-screen").classList.remove("active");
+      document.getElementById("quiz-screen").classList.add("active");
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      let q = questions[currentQuestion];
+      document.getElementById("question-text").innerText = q.question;
+      document.getElementById("question-number").innerText = 
+        `Question ${currentQuestion + 1} of ${questions.length}`;
+      document.getElementById("score").innerText = `Score: ${score}`;
+      
+      let optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.options.forEach(opt => {
+        let btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt, btn);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected, btn) {
+      let correct = questions[currentQuestion].answer;
+      if (selected === correct) {
+        btn.classList.add("correct");
+        score++;
+      } else {
+        btn.classList.add("wrong");
+      }
+      document.querySelectorAll("#options button").forEach(b => b.disabled = true);
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz-screen").classList.remove("active");
+        document.getElementById("result-screen").classList.add("active");
+        document.getElementById("final-score").innerText = score;
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("result-screen").classList.remove("active");
+      document.getElementById("start-screen").classList.add("active");
+    }
+  </script>
+</body>
+</html>
