@@ -60,9 +60,27 @@
       justify-content: space-between;
       margin-bottom: 20px;
     }
+
+    nav {
+      background: #333;
+      padding: 10px;
+    }
+    nav button {
+      background: #444;
+      margin: 0 5px;
+    }
+    nav button:hover {
+      background: #666;
+    }
   </style>
 </head>
 <body>
+  <!-- Navigation Bar -->
+  <nav>
+    <button onclick="showScreen('home')">Home</button>
+    <button onclick="showScreen('about')">About</button>
+  </nav>
+
   <!-- Start Screen -->
   <div id="start-screen" class="screen active">
     <h1>Let's Start Quiz</h1>
@@ -88,6 +106,16 @@
     <button onclick="restartQuiz()">Restart</button>
   </div>
 
+  <!-- About Screen -->
+  <div id="about-screen" class="screen">
+    <h1>About This Quiz</h1>
+    <p>👋 Hi, I am <b>ABHISHEK,</b> I am from PAHEDA</p>
+    <p>This quiz game create by me<b>
+    HTML, CSS, and JavaScript</b>.  
+    You can play it to test your general knowledge.</p>
+    <p>kya tomhe ye game pasand aaya</p>
+  </div>
+
   <script>
     const questions = [
       {
@@ -111,7 +139,7 @@
     let score = 0;
 
     function startQuiz() {
-      document.getElementById("start-screen").classList.remove("active");
+      hideAll();
       document.getElementById("quiz-screen").classList.add("active");
       loadQuestion();
     }
@@ -149,7 +177,7 @@
       if (currentQuestion < questions.length) {
         loadQuestion();
       } else {
-        document.getElementById("quiz-screen").classList.remove("active");
+        hideAll();
         document.getElementById("result-screen").classList.add("active");
         document.getElementById("final-score").innerText = score;
       }
@@ -158,8 +186,23 @@
     function restartQuiz() {
       currentQuestion = 0;
       score = 0;
-      document.getElementById("result-screen").classList.remove("active");
+      hideAll();
       document.getElementById("start-screen").classList.add("active");
+    }
+
+    // Hide all screens
+    function hideAll() {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    }
+
+    // Show screen by nav
+    function showScreen(page) {
+      hideAll();
+      if (page === 'home') {
+        document.getElementById("start-screen").classList.add("active");
+      } else if (page === 'about') {
+        document.getElementById("about-screen").classList.add("active");
+      }
     }
   </script>
 </body>
